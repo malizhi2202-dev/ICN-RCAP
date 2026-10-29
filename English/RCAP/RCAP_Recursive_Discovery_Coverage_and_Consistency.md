@@ -31,7 +31,7 @@ Let $D$ be the set of administrative domains and $I$ the set of capability insta
 Let $\sigma$ be a reference cut consisting of registration snapshots and policy versions participating in a query. Let $C_d^\sigma$ contain the declarations in domain $d$'s responsibility region at that cut, including its descendants. Declarations held locally by an internal domain can be treated as an attached leaf to unify the recursive proof. Let $V_\sigma(u,c)$ indicate that principal $u$ may discover declaration $c$ through at least one valid discovery context, and $H(q,c)$ indicate that $c$ satisfies query $q$'s hard constraints. The reference answer set is
 
 $$
-F_\sigma(q,u)=\{c\in\bigcup_{d\in D}C_d^\sigma:V_\sigma(u,c)\land H(q,c)\}. \qquad (R1)
+F_\sigma(q,u)=\lbrace c\in\bigcup_{d\in D}C_d^\sigma:V_\sigma(u,c)\land H(q,c)\rbrace. \qquad (R1)
 $$
 
 The set of capabilities actually able to fulfill their contracts at time $t$ is denoted separately by $F_t^{\mathrm{real}}$. Equality of the returned set with $F_\sigma$ does not imply equality with $F_t^{\mathrm{real}}$. False declarations, environmental change, and immediate authorization revocation can invalidate the latter equality. Directory completeness must not silently become a claim of real-world availability.
@@ -55,12 +55,12 @@ The set of capabilities actually able to fulfill their contracts at time $t$ is 
 For domain $d$, write $\gamma(S_d)$ for the interpretation set of summary $S_d$. It may contain candidates that do not exist, but sound exclusion requires it to contain every declaration visible to the principal at the reference cut:
 
 $$
-C_d^{\sigma,u}\subseteq\gamma(S_d),\qquad C_d^{\sigma,u}=\{c\in C_d^\sigma:V_\sigma(u,c)\}. \qquad (R2)
+C_d^{\sigma,u}\subseteq\gamma(S_d),\qquad C_d^{\sigma,u}=\lbrace c\in C_d^\sigma:V_\sigma(u,c)\rbrace. \qquad (R2)
 $$
 
 This uses the idea of conservative overapproximation from abstract interpretation [6]. An arbitrary vector embedding is not assumed to satisfy R2. Semantic embeddings usually offer empirical recall rather than a per-query set-inclusion guarantee.
 
-Let $Q_q=\{c:H(q,c)\}$. A domain may be excluded by its summary only when its coverage, version, and policy scope are valid and
+Let $Q_q=\lbrace c:H(q,c)\rbrace$. A domain may be excluded by its summary only when its coverage, version, and policy scope are valid and
 
 $$
 \gamma(S_d)\cap Q_q=\varnothing. \qquad (R3)
@@ -74,7 +74,7 @@ R2 then implies that no visible declaration in the domain satisfies the query. T
 
 **Proof.** First, no extra answers are produced: each returned witness passes visibility and hard-constraint checks at its leaf, so it belongs to $F_\sigma$. Conversely, take any $c\in F_\sigma$. Along the path to its responsible leaf, R2 ensures that every ancestor summary's interpretation contains $c$. Since $c\in Q_q$, no such ancestor satisfies R3. The path is therefore retained and eventually reaches the leaf, which returns $c$. The two inclusions establish equality. With multiple affiliations, first reduce ownership to responsibility partitions and apply the same argument.
 
-Eventual expansion is essential. Budget exhaustion or missing responses yields only partial results. Finite depth limits a path length but not total visits. A full tree with branching factor $b>1$ and height $h$ has
+Eventual expansion is essential. Budget exhaustion or missing responses yields only partial results. Finite depth limits a path length but not total visits. A full tree with branching factor $b\gt 1$ and height $h$ has
 
 $$
 N=\sum_{j=0}^{h}b^j=\frac{b^{h+1}-1}{b-1}. \qquad (R4)
@@ -95,7 +95,7 @@ This does not assert that all compression loses relevant information. A summary 
 For a static, insertion-only label set with consistent normalization, a Bloom filter does not reject an inserted label. Under ideal uniform hashing and the usual independence approximation, its false-positive probability is [7]
 
 $$
-p_{\mathrm{fp}}\approx(1-e^{-kn/m})^k,\qquad k^*\approx\frac{m}{n}\ln 2. \qquad (R5)
+p_{\mathrm{fp}}\approx(1-e^{-kn/m})^k,\qquad k^{\ast}\approx\frac{m}{n}\ln 2. \qquad (R5)
 $$
 
 Here $m$ is the bit count, $n$ the number of distinct labels, and $k$ the number of hash functions; an actual $k$ must be an integer. This classical result is not a contribution of this paper. A newly declared label absent from an older summary can be missed; directly clearing shared bits can also introduce omissions. The same-snapshot no-false-negative property therefore cannot replace R2's coverage requirement, or establish numerical constraints, compound predicates, or execution capability.
@@ -115,10 +115,10 @@ Assume $R$ is deduplicated by canonical identity and let $r=|R|$. Each unresolve
 **Proposition D3.** For a nonempty reference answer set, under A1–A4 and valid bounds as above, actual recall satisfies
 
 $$
-\operatorname{Recall}=\frac{r}{|F_\sigma|}\ge\frac{r}{r+U}=L. \qquad (R6)
+\mathrm{Recall}=\frac{r}{|F_\sigma|}\ge\frac{r}{r+U}=L. \qquad (R6)
 $$
 
-**Proof.** Every correct answer not returned lies in at least one unresolved region; otherwise the coverage partition is incomplete. Regional bounds and subadditivity of union cardinality imply that the total number of missing answers is at most $U$. Thus $|F_\sigma|\le r+U$, which gives the inequality for positive denominators. When $r=0$ and $U>0$, the bound is 0. When both are 0, the evidence establishes an empty reference set; recall is not defined through $0/0$, and the result is reported as complete emptiness.
+**Proof.** Every correct answer not returned lies in at least one unresolved region; otherwise the coverage partition is incomplete. Regional bounds and subadditivity of union cardinality imply that the total number of missing answers is at most $U$. Thus $|F_\sigma|\le r+U$, which gives the inequality for positive denominators. When $r=0$ and $U\gt 0$, the bound is 0. When both are 0, the evidence establishes an empty reference set; recall is not defined through $0/0$, and the result is reported as complete emptiness.
 
 If a region has no finite upper bound, only the trivial recall lower bound 0 is available. Unknown capacity must not be replaced with zero. A newly discovered region that was never covered invalidates the previous certificate. Changes to policy or versions require rebinding the certificate rather than carrying its old lower bound forward.
 
@@ -178,19 +178,19 @@ $$
 
 No independence between levels is required, but the bounds must hold for the relevant conditional distributions. Multiplying unconditioned single-level recall rates is incorrect. If errors at two levels coincide perfectly and each has probability 0.1, path retention is 0.9 rather than 0.81. Only when the same path bound applies to every target can linearity of expectation yield a bound on mean recall. A single target's path probability is not the probability of finding all targets simultaneously.
 
-**Research model.** Assume that assigning resource $b_j\ge0$ to level $j$ bounds its conditional pruning error by $a_j e^{-\kappa_j b_j}$, with $0<a_j\le1$ and $\kappa_j>0$. This exponential relation is a model hypothesis requiring validation, not a consequence of the Bloom formula. To minimize the bound in R10, consider
+**Research model.** Assume that assigning resource $b_j\ge0$ to level $j$ bounds its conditional pruning error by $a_j e^{-\kappa_j b_j}$, with $0\lt a_j\le1$ and $\kappa_j\gt 0$. This exponential relation is a model hypothesis requiring validation, not a consequence of the Bloom formula. To minimize the bound in R10, consider
 
 $$
 \min_{b_j\ge0}\sum_j a_j e^{-\kappa_j b_j},\qquad \sum_j b_j\le B_c. \qquad (R11)
 $$
 
-**Proposition D6.** For $B_c>0$, R11 is strictly convex and its unique optimum satisfies
+**Proposition D6.** For $B_c\gt 0$, R11 is strictly convex and its unique optimum satisfies
 
 $$
-b_j^*=\max\left\{0,\frac{1}{\kappa_j}\ln\frac{a_j\kappa_j}{\mu}\right\},\qquad \sum_j b_j^*=B_c. \qquad (R12)
+b_j^{\ast}=\max\left\lbrace0,\frac{1}{\kappa_j}\ln\frac{a_j\kappa_j}{\mu}\right\rbrace,\qquad \sum_j b_j^{\ast}=B_c. \qquad (R12)
 $$
 
-**Proof.** Each term has second derivative $a_j\kappa_j^2 e^{-\kappa_jb_j}>0$, so the objective is strictly convex. Increasing any allocation strictly decreases the objective, and the optimum exhausts the budget. Lagrangian stationarity gives $a_j\kappa_j e^{-\kappa_j b_j}=\mu$ for positive allocations and $a_j\kappa_j\le\mu$ for zero allocations, yielding R12. Total allocation decreases continuously with $\mu$, uniquely determining the multiplier for a positive budget. For $B_c=0$, all allocations are zero.
+**Proof.** Each term has second derivative $a_j\kappa_j^2 e^{-\kappa_jb_j}\gt 0$, so the objective is strictly convex. Increasing any allocation strictly decreases the objective, and the optimum exhausts the budget. Lagrangian stationarity gives $a_j\kappa_j e^{-\kappa_j b_j}=\mu$ for positive allocations and $a_j\kappa_j\le\mu$ for zero allocations, yielding R12. Total allocation decreases continuously with $\mu$, uniquely determining the multiplier for a positive budget. For $B_c=0$, all allocations are zero.
 
 The result equalizes marginal reduction in the error bound instead of mechanically splitting resources equally. $B_c$ is a continuous abstract evidence resource, not R8's integer expansion budget. Rounding and distribution change require further analysis. If the conditional error model is wrong, the optimum only optimizes that wrong model and carries no continuing probabilistic guarantee.
 
@@ -198,7 +198,7 @@ The result equalizes marginal reduction in the error bound instead of mechanical
 
 ### 7.1 Periodic refresh model
 
-Let the refresh period be $T>0$ and the cost per refresh be $a>0$. Changes invalidating a reference record follow a Poisson process of rate $\lambda>0$. Each refresh obtains the current value with negligible refresh delay. Queries are independent and sample uniformly within a cycle. After a change, the old record remains stale until the next refresh; a coincidental return to the same value does not restore its version validity.
+Let the refresh period be $T\gt 0$ and the cost per refresh be $a\gt 0$. Changes invalidating a reference record follow a Poisson process of rate $\lambda\gt 0$. Each refresh obtains the current value with negligible refresh delay. Queries are independent and sample uniformly within a cycle. After a change, the old record remains stale until the next refresh; a coincidental return to the same value does not restore its version validity.
 
 At record age $s$, the stale probability is $1-e^{-\lambda s}$. The average stale fraction and total cost are
 
@@ -206,7 +206,7 @@ $$
 \bar p(T)=1-\frac{1-e^{-\lambda T}}{\lambda T},\qquad J(T)=\frac{a}{T}+b\bar p(T), \qquad (R13)
 $$
 
-where $b>0$ is expected loss per unit time under fully stale operation, incorporating query frequency and loss per query. This describes directory staleness costs, not an allowable execution interval after authorization revocation.
+where $b\gt 0$ is expected loss per unit time under fully stale operation, incorporating query frequency and loss per query. This describes directory staleness costs, not an allowable execution interval after authorization revocation.
 
 ### 7.2 When a finite optimal period exists
 
@@ -216,18 +216,18 @@ $$
 J'(T)=\frac{-a+(b/\lambda)[1-(1+\lambda T)e^{-\lambda T}]}{T^2}. \qquad (R14)
 $$
 
-**Proposition D7.** The unconstrained model has a unique finite global optimum if and only if $0<a\lambda/b<1$. Writing $x=\lambda T$, that optimum satisfies
+**Proposition D7.** The unconstrained model has a unique finite global optimum if and only if $0\lt a\lambda/b\lt 1$. Writing $x=\lambda T$, that optimum satisfies
 
 $$
 1-(1+x)e^{-x}=\frac{a\lambda}{b}. \qquad (R15)
 $$
 
-**Proof.** The function $g(x)$ on the left has derivative $xe^{-x}>0$ for $x>0$ and increases strictly from 0 to 1. A right-hand side strictly between 0 and 1 therefore yields one root. R14 is negative before the root and positive after it, giving a unique global minimum. If $a\lambda/b\ge1$, the derivative remains negative for every finite $T$; cost decreases toward $b$ and has no finite minimum.
+**Proof.** The function $g(x)$ on the left has derivative $xe^{-x}\gt 0$ for $x\gt 0$ and increases strictly from 0 to 1. A right-hand side strictly between 0 and 1 therefore yields one root. R14 is negative before the root and positive after it, giving a unique global minimum. If $a\lambda/b\ge1$, the derivative remains negative for every finite $T$; cost decreases toward $b$ and has no finite minimum.
 
 This corrects an unconditional use of a square-root lease optimum. Only for $\lambda T\ll1$ does $\bar p(T)=\lambda T/2+O((\lambda T)^2)$ support the approximation
 
 $$
-J(T)\approx\frac aT+\frac{b\lambda T}{2},\qquad T^*\approx\sqrt{\frac{2a}{b\lambda}}. \qquad (R16)
+J(T)\approx\frac aT+\frac{b\lambda T}{2},\qquad T^{\ast}\approx\sqrt{\frac{2a}{b\lambda}}. \qquad (R16)
 $$
 
 With $T\in[T_{\min},T_{\max}]$, clamp an existing interior root to the interval; if no finite root exists, choose $T_{\max}$. When $\lambda=0$ or $b=0$, refresh cost decreases monotonically and there is again no unconstrained finite optimum. Propagation delay, correlation between queries and updates, or nonstationary change intensity requires a new age model rather than continued use of R13.

@@ -37,7 +37,7 @@ $$
 Here $P_c$ is the set of pre-states, $R_c$ the permitted transition relation, $Q_c$ the post-state set, and $E_c\subseteq\mathcal{A}$ the permitted actions or effects. Inputs, outputs, and environmental observations can be included in the state, so an output field cannot conceal undeclared physical effects. For actual transitions from valid pre-states, partial correctness requires
 
 $$
-R_c(P_c)\subseteq Q_c,\qquad \operatorname{Effects}(c)\subseteq E_c. \qquad (C2)
+R_c(P_c)\subseteq Q_c,\qquad \mathrm{Effects}(c)\subseteq E_c. \qquad (C2)
 $$
 
 $R_c(P_c)$ denotes the successors reachable from $P_c$. C2 proves neither termination nor a deadline: a capability that never finishes may still satisfy partial correctness. Tasks requiring termination need a separate total-correctness or bounded-completion obligation.
@@ -138,7 +138,7 @@ Suppose an authority revokes a grant at real time $t_r$. Relevant decision maker
 **Proposition T4.** Under these assumptions, the window in which an old grant can still cause a commitment after revocation is bounded by
 
 $$
-W\le\min\{d,L+2\epsilon\}+\Delta. \qquad (C8)
+W\le\min\lbrace d,L+2\epsilon\rbrace+\Delta. \qquad (C8)
 $$
 
 **Proof.** Revocation propagation stops new acceptance of the old grant no later than $t_r+d$. Every credential issued before revocation has a latest real-time acceptance deadline no later than $t_r+L+2\epsilon$. The two clock errors correspond to a fast issuing clock and a slow checking clock. Either stopping condition suffices, so the last acceptance is bounded by the earlier one. Already accepted actions may commit up to $\Delta$ later, yielding C8.
@@ -174,7 +174,7 @@ For example, $\pi=0.1,s=0.95,f=0.05$ yields a probability of actual goal satisfa
 Suppose two verifiers have false-pass rates at most $\alpha_1,\alpha_2$ when the goal is false. Without independence, one can still assert
 
 $$
-\Pr(V_1\cap V_2\mid\neg G)\le\min\{\alpha_1,\alpha_2\}. \qquad (C10)
+\Pr(V_1\cap V_2\mid\neg G)\le\min\lbrace\alpha_1,\alpha_2\rbrace. \qquad (C10)
 $$
 
 Multiplication requires conditional independence given goal falsity and the relevant context. Two verifiers copying the same faulty sensor can have perfectly correlated errors. Each false-pass rate may be 0.05 while the joint rate remains 0.05, not 0.0025. More verifiers do not necessarily provide more independent evidence. Common data sources, model origins, and failure causes must be traced.
@@ -184,7 +184,7 @@ Multiplication requires conditional independence given goal falsity and the rele
 Let the composite goal be $G=\bigcap_i G_i$, and let $\mathcal{E}$ be all accepted evidence. If each subgoal has a calibrated failure bound under that same complete evidence, $\Pr(\neg G_i\mid\mathcal{E})\le\delta_i$, then
 
 $$
-\Pr(G\mid\mathcal{E})\ge\max\left\{0,1-\sum_i\delta_i\right\}. \qquad (C11)
+\Pr(G\mid\mathcal{E})\ge\max\left\lbrace0,1-\sum_i\delta_i\right\rbrace. \qquad (C11)
 $$
 
 **Proof.** Failure of $G$ is the union of subgoal failure events. Apply the union bound in the common conditional probability space. No independence between goals is needed, but the bound may be conservative. Failure rates conditioned only on separate local evidence cannot automatically serve as the $\delta_i$ conditioned on all joint evidence. Additional evidence can change dependencies and posterior distributions.
@@ -197,10 +197,10 @@ If a subgoal has no failure bound, 1 is its only worst-case bound, potentially r
 
 Organize evidence and conclusions as a directed acyclic graph $G_E=(N_E,E_E)$, with edges from premises to dependent conclusions. Leaf evidence has an explicit source, time, scope, and acceptance condition. A derivation requires every listed premise and its inference rule to be valid. Alternative proof paths should be represented separately rather than mixed into an ambiguous premise list.
 
-If evidence node $z$ becomes invalid, let $\operatorname{Desc}(z)$ be the conclusions reachable along dependency edges. The scope that must be reconsidered is
+If evidence node $z$ becomes invalid, let $\mathrm{Desc}(z)$ be the conclusions reachable along dependency edges. The scope that must be reconsidered is
 
 $$
-\mathcal{I}(z)=\{z\}\cup\operatorname{Desc}(z). \qquad (C12)
+\mathcal{I}(z)=\lbrace z\rbrace\cup\mathrm{Desc}(z). \qquad (C12)
 $$
 
 **Proposition T6.** If conclusions depend only on their recorded premises and support is conjunctive, propagating invalidation along successors identifies all conclusions losing support from that proof. Conclusions outside the reachable set do not lose their graph-internal support because of this premise change.
